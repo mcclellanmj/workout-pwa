@@ -9,26 +9,42 @@ class Timer extends HTMLElement {
         this.timerRootElement = document.createElement('span');
         this.timerRootElement.setAttribute('class', 'wrapper');
 
-        var time = this.getAttribute('time')
-        this.remainingTime = parseInt(time);
-        this.setText(this.remainingTime);
+        this.startTime = Date.now();
+
+        const time = this.getAttribute('time')
+        this.totalTime = parseInt(time);
+        this.setText(this.totalTime);
 
         shadow.appendChild(this.timerRootElement);
 
-        this.ticker = window.setInterval(() => this.tick(), 1000);
+        this.ticker = window.setInterval(() => this.tick(), 500);
     }
 
     tick() {
-        if(this.remainingTime == 0) {
+        const elapsed = (Date.now() - this.startTime) / 1000;
+        const remaining = Math.ceil(this.totalTime - elapsed);
+
+        if(remaining < 0) {
             window.clearInterval(this.ticker);
         } else {
-            this.remainingTime -= 1;
-            this.setText(this.remainingTime);
+            this.setText(remaining);
         }
     }
 
+    makeTickEvent(value) {
+        return new CustomEvent("tick",
+            {
+                "bubbles": false,
+                "detail": { "remaining": value }
+            });
+    }
+
     setText(newValue) {
-        this.timerRootElement.innerHTML = newValue;
+        if(this.lastSet !== newValue) {
+            this.dispatchEvent(this.makeTickEvent(newValue));
+            this.timerRootElement.innerHTML = newValue;
+            this.lastSet = newValue;
+        }
     }
 }
 
