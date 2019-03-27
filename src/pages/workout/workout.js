@@ -120,7 +120,7 @@ var workout = {
     ]
 };
 
-var exercisePointer = 21;
+var exercisePointer = 0;
 const restTime = 90;
 
 function getCurrentExercise(pointer) {
@@ -187,10 +187,17 @@ function renderNextLink() {
 }
 
 function renderTimedExercise(exercise) {
-    const timer = makeElement("mcclellanmj-timer", {"id": "workout-timer", "time": exercise.time})
+    const timer = makeElement("mcclellanmj-timer", {"id": "workout-timer", "time": 10})
     timer.addEventListener("tick", (e) => {
         if(0 === e.detail.remaining) {
-            timer.replaceWith(renderNextLink());
+            const newTimer = makeElement("mcclellanmj-timer", {"id": "workout-timer", "time": exercise.time});
+            newTimer.addEventListener("tick", (e) => {
+                if(0 === e.detail.remaining) {
+                    newTimer.replaceWith(renderNextLink());
+                }
+            });
+
+            timer.replaceWith(newTimer);
         }
     });
 
