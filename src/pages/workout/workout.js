@@ -1,4 +1,5 @@
 var workout = {
+    "name": "Strength Calisthenics",
     "exercises": [
         { "name": "Pull Ups"
         , "type": "body-reps"
@@ -119,17 +120,25 @@ var workout = {
     ]
 };
 
-var exercisePointer = 0;
+var exercisePointer = 21;
 const restTime = 90;
 
 function getCurrentExercise(pointer) {
     return workout.exercises[pointer];
 }
 
+function setFrameContent(child) {
+    const newFrame = makeElement("div", {"id": "frame"});
+    newFrame.appendChild(child);
+
+    document.getElementById("frame").replaceWith(newFrame);
+}
+
 function nextExercise() {
     if(exercisePointer < workout.exercises.length - 1) {
-        document.getElementById("frame").innerHTML = `<mcclellanmj-timer id='rest-timer' time='${restTime}' />`;
-        document.getElementById("rest-timer").addEventListener("tick", e => {
+        const timerElement = makeElement("mcclellanmj-timer", {"id": "rest-timer", "time": restTime});
+
+        timerElement.addEventListener("tick", e => {
             const remaining = e.detail.remaining;
 
             if(remaining === 0) {
@@ -141,8 +150,10 @@ function nextExercise() {
                 document.getElementById("frame").replaceWith(newFrame);
             }
         });
+
+        setFrameContent(timerElement);
     } else {
-        document.getElementById("frame").innerHTML = "DONE!";
+        setFrameContent(makeElementWithContent("div", {}, "DONE!"));
     }
 }
 
@@ -175,6 +186,17 @@ function renderNextLink() {
     return makeElementWithContent("a", {"href": "javascript:nextExercise()"}, "Next");
 }
 
+function renderTimedExercise(exercise) {
+    const timer = makeElement("mcclellanmj-timer", {"id": "workout-timer", "time": exercise.time})
+    timer.addEventListener("tick", (e) => {
+        if(0 === e.detail.remaining) {
+            timer.replaceWith(renderNextLink());
+        }
+    });
+
+    return timer;
+}
+
 function renderExercise(exercise) {
     const container = makeElement("div", {});
     container.appendChild(renderExerciseHeader(exercise));
@@ -188,18 +210,11 @@ function renderExercise(exercise) {
     return container;
 }
 
-function emptyElement(element) {
-    while( element.firstChild ) {
-        element.removeChild(element.firstChild);
-    }
+function beginApp() {
+    const exercise = getCurrentExercise(exercisePointer);
+
+    document.getElementById("workout-title").textContent = workout.name;
+    setFrameContent(renderExercise(exercise));
 }
 
-function startWorkout() {
-    const currentExercise = getCurrentExercise(exercisePointer);
-
-    const frame = document.getElementById("frame");
-    emptyElement(frame);
-    frame.appendChild(renderExercise(currentExercise));
-}
-
-document.addEventListener("DOMContentLoaded", startWorkout);
+document.addEventListener("DOMContentLoaded", beginApp);

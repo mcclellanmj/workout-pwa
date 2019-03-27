@@ -4,14 +4,14 @@ class Timer extends HTMLElement {
     }
 
     connectedCallback() {
-        var shadow = this.attachShadow({ mode: 'open' })
+        var shadow = this.attachShadow({ mode: 'open' });
 
         this.timerRootElement = document.createElement('span');
         this.timerRootElement.setAttribute('class', 'wrapper');
 
         this.startTime = Date.now();
 
-        const time = this.getAttribute('time')
+        const time = this.getAttribute('time');
         this.totalTime = parseInt(time);
         this.setText(this.totalTime);
 
@@ -31,7 +31,7 @@ class Timer extends HTMLElement {
         }
     }
 
-    makeTickEvent(value) {
+    static makeTickEvent(value) {
         return new CustomEvent("tick",
             {
                 "bubbles": false,
@@ -41,8 +41,8 @@ class Timer extends HTMLElement {
 
     setText(newValue) {
         if(this.lastSet !== newValue) {
-            this.dispatchEvent(this.makeTickEvent(newValue));
-            this.timerRootElement.innerHTML = newValue;
+            this.dispatchEvent(Timer.makeTickEvent(newValue));
+            this.timerRootElement.textContent = newValue;
             this.lastSet = newValue;
         }
     }
