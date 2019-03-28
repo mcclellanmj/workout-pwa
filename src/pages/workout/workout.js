@@ -134,24 +134,31 @@ function setFrameContent(child) {
     document.getElementById("frame").replaceWith(newFrame);
 }
 
+function renderTimerPage() {
+    const container = makeElement("div", {"id": "timer-container"});
+
+    container.appendChild(makeElementWithContent("div", {}, "Next Exercise"));
+    container.appendChild(makeElementWithContent("div", {}, getCurrentExercise(exercisePointer + 1).name));
+
+    const timerElement = makeElement("mcclellanmj-timer", {"id": "rest-timer", "time": restTime});
+
+    timerElement.addEventListener("tick", e => {
+        const remaining = e.detail.remaining;
+
+        if(remaining === 0) {
+            exercisePointer += 1;
+
+            setFrameContent(renderExercise(getCurrentExercise(exercisePointer)));
+        }
+    });
+
+    container.appendChild(timerElement);
+    return container;
+}
+
 function nextExercise() {
     if(exercisePointer < workout.exercises.length - 1) {
-        const timerElement = makeElement("mcclellanmj-timer", {"id": "rest-timer", "time": restTime});
-
-        timerElement.addEventListener("tick", e => {
-            const remaining = e.detail.remaining;
-
-            if(remaining === 0) {
-                exercisePointer += 1;
-
-                const newFrame = makeElement("div", {"id": "frame"});
-                newFrame.appendChild(renderExercise(getCurrentExercise(exercisePointer)));
-
-                document.getElementById("frame").replaceWith(newFrame);
-            }
-        });
-
-        setFrameContent(timerElement);
+        setFrameContent(renderTimerPage());
     } else {
         setFrameContent(makeElementWithContent("div", {}, "DONE!"));
     }
@@ -217,7 +224,14 @@ function renderExercise(exercise) {
     return container;
 }
 
-function beginApp() {
+async function beginApp() {
+    try {
+        await navigator.getWakeLock("screen");
+    } catch (ex) {
+        // If we can't lock the screen ignore the error
+        // FIXME: Probably need to be some sort of notification in the UI that they don't have a locked screen
+    }
+
     const exercise = getCurrentExercise(exercisePointer);
 
     document.getElementById("workout-title").textContent = workout.name;

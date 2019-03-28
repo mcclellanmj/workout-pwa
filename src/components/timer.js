@@ -13,6 +13,7 @@ class Timer extends HTMLElement {
 
         const time = this.getAttribute('time');
         this.totalTime = parseInt(time);
+        this.lastSet = this.totalTime;
         this.setText(this.totalTime);
 
         shadow.appendChild(this.timerRootElement);
@@ -23,11 +24,16 @@ class Timer extends HTMLElement {
     tick() {
         const elapsed = (Date.now() - this.startTime) / 1000;
         const remaining = Math.ceil(this.totalTime - elapsed);
+        const externalRemaining = remaining < 0 ? 0 : remaining;
+
+        if(this.lastSet !== externalRemaining) {
+            this.dispatchEvent(Timer.makeTickEvent(externalRemaining));
+            this.setText(externalRemaining);
+            this.lastSet = externalRemaining;
+        }
 
         if(remaining < 0) {
             window.clearInterval(this.ticker);
-        } else {
-            this.setText(remaining);
         }
     }
 
@@ -40,11 +46,7 @@ class Timer extends HTMLElement {
     }
 
     setText(newValue) {
-        if(this.lastSet !== newValue) {
-            this.dispatchEvent(Timer.makeTickEvent(newValue));
-            this.timerRootElement.textContent = newValue;
-            this.lastSet = newValue;
-        }
+        this.timerRootElement.textContent = newValue;
     }
 }
 
