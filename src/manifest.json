@@ -1,0 +1,9 @@
+{
+    "name": "Workout-PWA",
+    "short_name": "Workout",
+    "description": "A tiny application for helping with workouts",
+    "start_url": "/workout-pwa/index.html",
+    "theme_color": "#E9E918",
+    "background_color": "#30302E",
+    "display": "standalone"
+  }

@@ -123,6 +123,15 @@ var workout = {
 var exercisePointer = 0;
 const restTime = 90;
 
+function incrementExercise() {
+    exercisePointer++;
+    updateCounter();
+}
+
+function updateCounter() {
+    document.getElementById("counter").textContent = `${exercisePointer + 1} / ${workout.exercises.length}`
+}
+
 function getCurrentExercise(pointer) {
     return workout.exercises[pointer];
 }
@@ -146,7 +155,7 @@ function renderTimerPage() {
         const remaining = e.detail.remaining;
 
         if(remaining === 0) {
-            exercisePointer += 1;
+            incrementExercise();
 
             setFrameContent(renderExercise(getCurrentExercise(exercisePointer)));
         }
@@ -182,11 +191,6 @@ function makeElementWithContent(type, options, content) {
 }
 
 function renderExerciseHeader(exercise) {
-    const container = makeElement("div", {"id": "exercise"});
-    container.appendChild(makeElementWithContent("h1", {}, exercise.name));
-    container.appendChild(makeElementWithContent("span", {}, exercise.type));
-
-    return container;
 }
 
 function renderNextLink() {
@@ -213,7 +217,8 @@ function renderTimedExercise(exercise) {
 
 function renderExercise(exercise) {
     const container = makeElement("div", {});
-    container.appendChild(renderExerciseHeader(exercise));
+
+    container.appendChild(makeElementWithContent("h1", {}, exercise.name));
 
     if(exercise.type === "timed-exercise") {
         container.appendChild(renderTimedExercise(exercise));
@@ -226,15 +231,15 @@ function renderExercise(exercise) {
 
 async function beginApp() {
     try {
-        await navigator.getWakeLock("screen");
+        const wakelock = await navigator.getWakeLock("screen");
+        wakelock.createRequest();
     } catch (ex) {
         // If we can't lock the screen ignore the error
         // FIXME: Probably need to be some sort of notification in the UI that they don't have a locked screen
     }
 
     const exercise = getCurrentExercise(exercisePointer);
-
-    document.getElementById("workout-title").textContent = workout.name;
+    updateCounter();
     setFrameContent(renderExercise(exercise));
 }
 
