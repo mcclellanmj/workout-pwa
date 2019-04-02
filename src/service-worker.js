@@ -1,5 +1,11 @@
-const version = 2018122101;
+const version = 20190401;
 
 addEventListener('install', event => {
-    console.log("Installed");
+    //console.log("Installed");
 });
+
+addEventListener('fetch', event => {
+    event.respondWith(
+       fetch(event.request)
+    );
+  });
