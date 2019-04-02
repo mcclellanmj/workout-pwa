@@ -111,7 +111,7 @@ var workout = {
 
         { "name": "Copenhagen Plank"
         , "type": "timed-exercise"
-        , "time": "30"
+        , "time": "3"
         },
 
         { "name": "Reverse Hyperextension"
@@ -146,8 +146,11 @@ function setFrameContent(child) {
 function renderTimerPage() {
     const container = makeElement("div", {"id": "timer-container"});
 
-    container.appendChild(makeElementWithContent("div", {}, "Next Exercise"));
-    container.appendChild(makeElementWithContent("div", {}, getCurrentExercise(exercisePointer + 1).name));
+    const nextWrapper = makeElement("div", {"id": "timer-header"});
+
+    nextWrapper.appendChild(makeElementWithContent("h5", {}, "Next Exercise"));
+    nextWrapper.appendChild(makeElementWithContent("h5", {}, getCurrentExercise(exercisePointer + 1).name));
+    container.appendChild(nextWrapper);
 
     const timerElement = makeElement("mcclellanmj-timer", {"id": "rest-timer", "time": restTime});
 
@@ -190,11 +193,8 @@ function makeElementWithContent(type, options, content) {
     return newElement;
 }
 
-function renderExerciseHeader(exercise) {
-}
-
 function renderNextLink() {
-    return makeElementWithContent("a", {"href": "javascript:nextExercise()"}, "Next");
+    return makeElementWithContent("a", {"href": "javascript:nextExercise()", "class": "btn-primary", "id": "next-exercise-button"}, "Next");
 }
 
 function renderTimedExercise(exercise) {
@@ -204,7 +204,8 @@ function renderTimedExercise(exercise) {
             const newTimer = makeElement("mcclellanmj-timer", {"id": "workout-timer", "time": exercise.time});
             newTimer.addEventListener("tick", (e) => {
                 if(0 === e.detail.remaining) {
-                    newTimer.replaceWith(renderNextLink());
+                    newTimer.replaceWith(makeElement("div", {"id": "timer-placeholder"}));
+                    document.getElementById("link-placeholder").replaceWith(renderNextLink());
                 }
             });
 
@@ -216,13 +217,15 @@ function renderTimedExercise(exercise) {
 }
 
 function renderExercise(exercise) {
-    const container = makeElement("div", {});
+    const container = makeElement("div", {"id": "exercise-container"});
 
     container.appendChild(makeElementWithContent("h1", {}, exercise.name));
 
     if(exercise.type === "timed-exercise") {
         container.appendChild(renderTimedExercise(exercise));
+        container.appendChild(makeElement("div", {"id": "link-placeholder"}));
     } else {
+        container.appendChild(makeElement("div", {"id": "timer-placeholder"}));
         container.appendChild(renderNextLink());
     }
 
