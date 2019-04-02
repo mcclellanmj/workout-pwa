@@ -55,7 +55,7 @@ var workout = {
         , "type": "body-reps"
         },
 
-        { "name": "Diamond Pushups"
+        { "name": "Planche Pushup"
         , "type": "body-reps"
         },
 
@@ -63,7 +63,7 @@ var workout = {
         , "type" : "body-reps"
         },
 
-        { "name": "Diamond Pushups"
+        { "name": "Planche Pushup"
         , "type": "body-reps"
         },
 
@@ -71,14 +71,13 @@ var workout = {
         , "type": "body-reps"
         },
 
-        { "name": "Diamond Pushups"
+        { "name": "Planche Pushup"
         , "type": "body-reps"
         },
 
         // Set 4
-        { "name": "Plank"
-        , "type": "timed-exercise"
-        , "time": "30"
+        { "name": "Hanging Knee Raise"
+        , "type": "body-reps"
         },
 
         { "name": "Copenhagen Plank"
@@ -90,9 +89,8 @@ var workout = {
         , "type": "body-reps"
         },
 
-        { "name": "Plank"
-        , "type": "timed-exercise"
-        , "time": "30"
+        { "name": "Hanging Knee Raise"
+        , "type": "body-reps"
         },
 
         { "name": "Copenhagen Plank"
@@ -104,9 +102,8 @@ var workout = {
         , "type": "body-reps"
         },
 
-        { "name": "Plank"
-        , "type": "timed-exercise"
-        , "time": "30"
+        { "name": "Hanging Knee Raise"
+        , "type": "body-reps"
         },
 
         { "name": "Copenhagen Plank"
