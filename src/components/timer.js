@@ -1,3 +1,5 @@
+import { element } from "../javascript/element-utils.js";
+
 class Timer extends HTMLElement {
     constructor() {
         super();
@@ -6,8 +8,7 @@ class Timer extends HTMLElement {
     connectedCallback() {
         var shadow = this.attachShadow({ mode: 'open' });
 
-        this.timerRootElement = document.createElement('span');
-        this.timerRootElement.setAttribute('class', 'wrapper');
+        this.timerRootElement = element('span', {'class': 'wrapper'});
 
         this.startTime = Date.now();
 

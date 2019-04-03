@@ -1,3 +1,5 @@
+import { text, element } from '../../javascript/element-utils.js';
+
 var workout = {
     "name": "Strength Calisthenics",
     "exercises": [
@@ -134,22 +136,21 @@ function getCurrentExercise(pointer) {
 }
 
 function setFrameContent(child) {
-    const newFrame = makeElement("div", {"id": "frame"});
-    newFrame.appendChild(child);
+    const newFrame = element("div", {"id": "frame"}, child);
 
     document.getElementById("frame").replaceWith(newFrame);
 }
 
 function renderTimerPage() {
-    const container = makeElement("div", {"id": "timer-container"});
+    const container = element("div", {"id": "timer-container"});
 
-    const nextWrapper = makeElement("div", {"id": "timer-header"});
+    const nextWrapper = element("div", {"id": "timer-header"});
 
-    nextWrapper.appendChild(makeElementWithContent("h5", {}, "Next Exercise"));
-    nextWrapper.appendChild(makeElementWithContent("h5", {}, getCurrentExercise(exercisePointer + 1).name));
+    nextWrapper.appendChild(element("h5", {}, text("Next Exercise")));
+    nextWrapper.appendChild(element("h5", {}, text(getCurrentExercise(exercisePointer + 1).name)));
     container.appendChild(nextWrapper);
 
-    const timerElement = makeElement("mcclellanmj-timer", {"id": "rest-timer", "time": restTime});
+    const timerElement = element("mcclellanmj-timer", {"id": "rest-timer", "time": restTime});
 
     timerElement.addEventListener("tick", e => {
         const remaining = e.detail.remaining;
@@ -169,39 +170,25 @@ function nextExercise() {
     if(exercisePointer < workout.exercises.length - 1) {
         setFrameContent(renderTimerPage());
     } else {
-        setFrameContent(makeElementWithContent("div", {}, "DONE!"));
+        setFrameContent(element("div", {}, text("DONE!")));
     }
-}
-
-function makeElement(type, options) {
-    const newElement = document.createElement(type);
-
-    for(const [key, value] of Object.entries(options)) {
-        newElement.setAttribute(key, value);
-    }
-
-    return newElement;
-}
-
-function makeElementWithContent(type, options, content) {
-    const newElement = makeElement(type, options);
-    newElement.appendChild(document.createTextNode(content));
-
-    return newElement;
 }
 
 function renderNextLink() {
-    return makeElementWithContent("a", {"href": "javascript:nextExercise()", "class": "btn-primary", "id": "next-exercise-button"}, "Next");
+    const nextLink = element("a", {"href": "javascript:void(0)", "class": "btn-primary", "id": "next-exercise-button"}, text("Next"));
+    nextLink.onclick = nextExercise.bind(this);
+
+    return nextLink;
 }
 
 function renderTimedExercise(exercise) {
-    const timer = makeElement("mcclellanmj-timer", {"id": "workout-timer", "time": 10})
+    const timer = element("mcclellanmj-timer", {"id": "workout-timer", "time": 10})
     timer.addEventListener("tick", (e) => {
         if(0 === e.detail.remaining) {
-            const newTimer = makeElement("mcclellanmj-timer", {"id": "workout-timer", "time": exercise.time});
+            const newTimer = element("mcclellanmj-timer", {"id": "workout-timer", "time": exercise.time});
             newTimer.addEventListener("tick", (e) => {
                 if(0 === e.detail.remaining) {
-                    newTimer.replaceWith(makeElement("div", {"id": "timer-placeholder"}));
+                    newTimer.replaceWith(element("div", {"id": "timer-placeholder"}));
                     document.getElementById("link-placeholder").replaceWith(renderNextLink());
                 }
             });
@@ -214,15 +201,15 @@ function renderTimedExercise(exercise) {
 }
 
 function renderExercise(exercise) {
-    const container = makeElement("div", {"id": "exercise-container"});
+    const container = element("div", {"id": "exercise-container"});
 
-    container.appendChild(makeElementWithContent("h1", {}, exercise.name));
+    container.appendChild(element("h1", {}, text(exercise.name)));
 
     if(exercise.type === "timed-exercise") {
         container.appendChild(renderTimedExercise(exercise));
-        container.appendChild(makeElement("div", {"id": "link-placeholder"}));
+        container.appendChild(element("div", {"id": "link-placeholder"}));
     } else {
-        container.appendChild(makeElement("div", {"id": "timer-placeholder"}));
+        container.appendChild(element("div", {"id": "timer-placeholder"}));
         container.appendChild(renderNextLink());
     }
 
