@@ -1,4 +1,4 @@
-const version = "v1.0.0";
+const version = "v1.0.1";
 
 const precache = [
   './',
@@ -13,20 +13,26 @@ const precache = [
 ]
 
 addEventListener('install', event => {
-  event.waitUntil((async () => {
+  const prefetch = async () => {
     const cache = await caches.open(version);
 
     await cache.addAll(precache);
-  })());
+  };
+
+  event.waitUntil(prefetch());
 });
 
 
 addEventListener('activate', event => {
-  event.waitUntil((async () => {
+  const clearOld = async () => {
     for (const cacheName of await caches.keys()) {
-      if (version != cacheName) await caches.delete(cacheName);
+      if (version != cacheName) {
+        await caches.delete(cacheName);
+      }
     }
-  })());
+  }
+
+  event.waitUntil(clearOld());
 });
 
 addEventListener('fetch', event => {
