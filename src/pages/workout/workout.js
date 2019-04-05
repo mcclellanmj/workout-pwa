@@ -78,8 +78,9 @@ var workout = {
         },
 
         // Set 4
-        { "name": "Hanging Knee Raise"
-        , "type": "body-reps"
+        { "name": "Plank"
+        , "type": "timed-exercise"
+        , "time": "60"
         },
 
         { "name": "Copenhagen Plank"
@@ -91,8 +92,9 @@ var workout = {
         , "type": "body-reps"
         },
 
-        { "name": "Hanging Knee Raise"
-        , "type": "body-reps"
+        { "name": "Plank"
+        , "type": "timed-exercise"
+        , "time": "60"
         },
 
         { "name": "Copenhagen Plank"
@@ -104,13 +106,14 @@ var workout = {
         , "type": "body-reps"
         },
 
-        { "name": "Hanging Knee Raise"
-        , "type": "body-reps"
+        { "name": "Plank"
+        , "type": "timed-exercise"
+        , "time": "60"
         },
 
         { "name": "Copenhagen Plank"
         , "type": "timed-exercise"
-        , "time": "3"
+        , "time": "30"
         },
 
         { "name": "Reverse Hyperextension"
