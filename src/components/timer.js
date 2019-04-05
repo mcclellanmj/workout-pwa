@@ -19,7 +19,7 @@ class Timer extends HTMLElement {
 
         shadow.appendChild(this.timerRootElement);
 
-        this.ticker = window.setInterval(() => this.tick(), 500);
+        this.ticker = window.setInterval(() => this.tick(), 100);
     }
 
     tick() {
