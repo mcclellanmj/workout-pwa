@@ -145,13 +145,12 @@ function setFrameContent(child) {
 }
 
 function renderTimerPage() {
-    const container = element("div", {"id": "timer-container"});
-
     const nextWrapper = element("div", {"id": "timer-header"});
 
     nextWrapper.appendChild(element("h5", {}, text("Next Exercise")));
     nextWrapper.appendChild(element("h5", {}, text(getCurrentExercise(exercisePointer + 1).name)));
-    container.appendChild(nextWrapper);
+
+    const container = element("div", {"id": "timer-container"}, nextWrapper);
 
     const timerElement = element("mcclellanmj-timer", {"id": "rest-timer", "time": restTime});
 
@@ -204,9 +203,9 @@ function renderTimedExercise(exercise) {
 }
 
 function renderExercise(exercise) {
-    const container = element("div", {"id": "exercise-container"});
-
-    container.appendChild(element("h1", {}, text(exercise.name)));
+    const container = element("div", {"id": "exercise-container"},
+        element("h1", {}, text(exercise.name))
+    );
 
     if(exercise.type === "timed-exercise") {
         container.appendChild(renderTimedExercise(exercise));
