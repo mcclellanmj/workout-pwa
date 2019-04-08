@@ -1,127 +1,6 @@
 import { text, element } from '../../javascript/element-utils.js';
 
-var workout = {
-    "name": "Strength Calisthenics",
-    "exercises": [
-        { "name": "Pull Ups"
-        , "type": "body-reps"
-        },
-
-        { "name": "Squats"
-        , "type": "weighted-reps"
-        },
-
-        { "name" : "Pull Ups"
-        , "type" : "body-reps"
-        },
-
-        { "name": "Squats"
-        , "type": "weighted-reps"
-        },
-
-        { "name": "Pull Ups"
-        , "type": "body-reps"
-        },
-
-        { "name": "Squats"
-        , "type": "weighted-reps"
-        },
-
-        // Set 2
-        { "name": "Dips"
-        , "type": "body-reps"
-        },
-
-        { "name": "Romanian Deadlifts"
-        , "type": "weighted-reps"
-        },
-
-        { "name" : "Dips"
-        , "type" : "body-reps"
-        },
-
-        { "name": "Romanian Deadlifts"
-        , "type": "weighted-reps"
-        },
-
-        { "name": "Dips"
-        , "type": "body-reps"
-        },
-
-        { "name": "Romanian Deadlifts"
-        , "type": "weighted-reps"
-        },
-
-        // Set 3
-        { "name": "Rows"
-        , "type": "body-reps"
-        },
-
-        { "name": "Planche Pushup"
-        , "type": "body-reps"
-        },
-
-        { "name" : "Rows"
-        , "type" : "body-reps"
-        },
-
-        { "name": "Planche Pushup"
-        , "type": "body-reps"
-        },
-
-        { "name": "Rows"
-        , "type": "body-reps"
-        },
-
-        { "name": "Planche Pushup"
-        , "type": "body-reps"
-        },
-
-        // Set 4
-        { "name": "Plank"
-        , "type": "timed-exercise"
-        , "time": "60"
-        },
-
-        { "name": "Copenhagen Plank"
-        , "type": "timed-exercise"
-        , "time": "30"
-        },
-
-        { "name": "Reverse Hyperextension"
-        , "type": "body-reps"
-        },
-
-        { "name": "Plank"
-        , "type": "timed-exercise"
-        , "time": "60"
-        },
-
-        { "name": "Copenhagen Plank"
-        , "type": "timed-exercise"
-        , "time": "30"
-        },
-
-        { "name": "Reverse Hyperextension"
-        , "type": "body-reps"
-        },
-
-        { "name": "Plank"
-        , "type": "timed-exercise"
-        , "time": "60"
-        },
-
-        { "name": "Copenhagen Plank"
-        , "type": "timed-exercise"
-        , "time": "30"
-        },
-
-        { "name": "Reverse Hyperextension"
-        , "type": "body-reps"
-        }
-    ]
-};
-
+var workout = "UNLOADED";
 var exercisePointer = 0;
 const restTime = 90;
 
@@ -225,6 +104,13 @@ async function beginApp() {
     } catch (ex) {
         // If we can't lock the screen ignore the error
         // FIXME: Probably need to be some sort of notification in the UI that they don't have a locked screen
+    }
+    const workoutId = window.location.hash.substr(1);
+
+    // TODO: Continue here getting the workout from the database
+    const dbRequest = indexedDB.open("workout-pwa");
+    dbRequest.onsuccess = function(evt) {
+        const db = evt.target.result;
     }
 
     const exercise = getCurrentExercise(exercisePointer);
