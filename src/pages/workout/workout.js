@@ -1,4 +1,5 @@
 import { text, element } from '../../javascript/element-utils.js';
+import { getExercise } from '../../javascript/storage.js';
 
 var workout = "UNLOADED";
 var exercisePointer = 0;
@@ -107,11 +108,9 @@ async function beginApp() {
     }
     const workoutId = window.location.hash.substr(1);
 
-    // TODO: Continue here getting the workout from the database
-    const dbRequest = indexedDB.open("workout-pwa");
-    dbRequest.onsuccess = function(evt) {
-        const db = evt.target.result;
-    }
+    // FIXME: Less global variables
+    const dbWorkout = await getExercise(parseInt(workoutId));
+    workout = dbWorkout;
 
     const exercise = getCurrentExercise(exercisePointer);
     updateCounter();
