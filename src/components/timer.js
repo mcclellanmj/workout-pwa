@@ -6,7 +6,7 @@ class Timer extends HTMLElement {
     }
 
     connectedCallback() {
-        var shadow = this.attachShadow({ mode: 'open' });
+        const shadow = this.attachShadow({ mode: 'open' });
 
         this.timerRootElement = element('span', {'class': 'wrapper'});
 

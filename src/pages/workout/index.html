@@ -3,9 +3,19 @@
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" type="text/css" href="../../css/main.css" />
-        <script src="../../javascript/element-utils.js" type="module" rel="preload"></script>
         <script src="../../components/timer.js" type="module"></script>
-        <script src="workout.js" type="module"></script>
+        <script src="../../javascript/element-utils.js" type="module" rel="preload"></script>
+        <script src="workout.js" type="module" rel="preload"></script>
+        <script type="module">
+            import { Workout } from "./workout.js";
+
+            const workoutId = window.location.hash.substr(1);
+
+            document.addEventListener("DOMContentLoaded", async () => {
+                const workout = await Workout.create(workoutId);
+                workout.beginApp();
+            });
+        </script>
     </head>
     <body>
         <div id="container">

@@ -8,153 +8,24 @@
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
 
     <script>
-        const strength =
-            { "name": "Strength Calisthenics",
-              "exercises": [
-                { "name": "Pull Ups"
-                , "type": "body-reps"
-                },
-
-                { "name": "Squats"
-                , "type": "weighted-reps"
-                },
-
-                { "name" : "Pull Ups"
-                , "type" : "body-reps"
-                },
-
-                { "name": "Squats"
-                , "type": "weighted-reps"
-                },
-
-                { "name": "Pull Ups"
-                , "type": "body-reps"
-                },
-
-                { "name": "Squats"
-                , "type": "weighted-reps"
-                },
-
-                // Set 2
-                { "name": "Dips"
-                , "type": "body-reps"
-                },
-
-                { "name": "Romanian Deadlifts"
-                , "type": "weighted-reps"
-                },
-
-                { "name" : "Dips"
-                , "type" : "body-reps"
-                },
-
-                { "name": "Romanian Deadlifts"
-                , "type": "weighted-reps"
-                },
-
-                { "name": "Dips"
-                , "type": "body-reps"
-                },
-
-                { "name": "Romanian Deadlifts"
-                , "type": "weighted-reps"
-                },
-
-                // Set 3
-                { "name": "Rows"
-                , "type": "body-reps"
-                },
-
-                { "name": "Planche Pushup"
-                , "type": "body-reps"
-                },
-
-                { "name" : "Rows"
-                , "type" : "body-reps"
-                },
-
-                { "name": "Planche Pushup"
-                , "type": "body-reps"
-                },
-
-                { "name": "Rows"
-                , "type": "body-reps"
-                },
-
-                { "name": "Planche Pushup"
-                , "type": "body-reps"
-                },
-
-                // Set 4
-                { "name": "Plank"
-                , "type": "timed-exercise"
-                , "time": "60"
-                },
-
-                { "name": "Copenhagen Plank"
-                , "type": "timed-exercise"
-                , "time": "30"
-                },
-
-                { "name": "Reverse Hyperextension"
-                , "type": "body-reps"
-                },
-
-                { "name": "Plank"
-                , "type": "timed-exercise"
-                , "time": "60"
-                },
-
-                { "name": "Copenhagen Plank"
-                , "type": "timed-exercise"
-                , "time": "30"
-                },
-
-                { "name": "Reverse Hyperextension"
-                , "type": "body-reps"
-                },
-
-                { "name": "Plank"
-                , "type": "timed-exercise"
-                , "time": "60"
-                },
-
-                { "name": "Copenhagen Plank"
-                , "type": "timed-exercise"
-                , "time": "30"
-                },
-
-                { "name": "Reverse Hyperextension"
-                , "type": "body-reps"
-                }
-            ]
-        };
-
-        const skill = {
-            "name": "Skill",
-            "exercises": [
-                { "name": "Skill Exercise?"
-                , "type": "body-reps"
-                }
-            ]
-        };
-
         const request = indexedDB.open('workout-pwa', 1);
-        request.onupgradeneeded = function(event) {
+        request.onupgradeneeded = (event) => {
             const db = event.target.result;
 
-            var objStore =  db.createObjectStore("workouts", { autoIncrement: true, keyPath: "id" });
-
+            const objStore =  db.createObjectStore("workouts", { autoIncrement: true, keyPath: "id" });
             objStore.createIndex("name", "name", { unique: true });
 
-            objStore.transaction.oncomplete = function(event) {
-                var exerciseStore = db.transaction("workouts", "readwrite").objectStore("workouts");
+            // Once the store is created insert the default data
+            objStore.transaction.oncomplete = async function(event) {
+                const response = await fetch("./javascript/default-workouts.json");
+                const body = await response.json();
 
-                [strength, skill].forEach(function(exercise) {
+                const exerciseStore = db.transaction("workouts", "readwrite").objectStore("workouts");
+                body.forEach(function(exercise) {
                     exerciseStore.add(exercise);
                 });
             }
-        }
+        };
 
         navigator.serviceWorker.register('service-worker.js', {
             scope: './'

@@ -1,120 +1,136 @@
-import { text, element } from '../../javascript/element-utils.js';
-import { getExercise } from '../../javascript/storage.js';
+import {text, element} from '../../javascript/element-utils.js';
+import {getExercise} from '../../javascript/storage.js';
 
-var workout = "UNLOADED";
-var exercisePointer = 0;
-const restTime = 90;
+class Rendering {
+    static createTimerPage(nextExercise, restTime, onFinish) {
+        const nextWrapper = element("div", {"id": "timer-header"});
 
-function incrementExercise() {
-    exercisePointer++;
-    updateCounter();
+        nextWrapper.appendChild(element("h5", {}, text("Next Exercise")));
+        nextWrapper.appendChild(element("h5", {}, text(nextExercise)));
+
+        const container = element("div", {"id": "timer-container"}, nextWrapper);
+        const timerElement = element("mcclellanmj-timer", {"id": "rest-timer", "time": restTime});
+
+        timerElement.addEventListener("tick", e => {
+            const remaining = e.detail.remaining;
+
+            if (remaining === 0) {
+                onFinish();
+            }
+        });
+
+        container.appendChild(timerElement);
+        return container;
+    }
+
+    static createNextLink(onclick) {
+        const nextLink = element("a", {
+            "href": "javascript:void(0)",
+            "class": "btn-primary",
+            "id": "next-exercise-button"
+        }, text("Next"));
+        nextLink.onclick = onclick;
+
+        return nextLink;
+    }
 }
 
-function updateCounter() {
-    document.getElementById("counter").textContent = `${exercisePointer + 1} / ${workout.exercises.length}`
-}
+export class Workout {
+    constructor() {
+        this.pointer = 0;
+        this.restTime = 90;
+    }
 
-function getCurrentExercise(pointer) {
-    return workout.exercises[pointer];
-}
+    static async create(workoutId) {
+        const workout = new Workout();
 
-function setFrameContent(child) {
-    const newFrame = element("div", {"id": "frame"}, child);
-
-    document.getElementById("frame").replaceWith(newFrame);
-}
-
-function renderTimerPage() {
-    const nextWrapper = element("div", {"id": "timer-header"});
-
-    nextWrapper.appendChild(element("h5", {}, text("Next Exercise")));
-    nextWrapper.appendChild(element("h5", {}, text(getCurrentExercise(exercisePointer + 1).name)));
-
-    const container = element("div", {"id": "timer-container"}, nextWrapper);
-
-    const timerElement = element("mcclellanmj-timer", {"id": "rest-timer", "time": restTime});
-
-    timerElement.addEventListener("tick", e => {
-        const remaining = e.detail.remaining;
-
-        if(remaining === 0) {
-            incrementExercise();
-
-            setFrameContent(renderExercise(getCurrentExercise(exercisePointer)));
+        try {
+            const wakelock = await navigator.getWakeLock("screen");
+            wakelock.createRequest();
+        } catch (ex) {
+            // If we can't lock the screen ignore the error
+            // FIXME: Probably need to be some sort of notification in the UI that they don't have a locked screen
         }
-    });
 
-    container.appendChild(timerElement);
-    return container;
-}
+        const dbWorkout = await getExercise(parseInt(workoutId));
+        workout.currentWorkout = dbWorkout;
 
-function nextExercise() {
-    if(exercisePointer < workout.exercises.length - 1) {
-        setFrameContent(renderTimerPage());
-    } else {
-        setFrameContent(element("div", {}, text("DONE!")));
+        return workout;
     }
-}
 
-function renderNextLink() {
-    const nextLink = element("a", {"href": "javascript:void(0)", "class": "btn-primary", "id": "next-exercise-button"}, text("Next"));
-    nextLink.onclick = nextExercise.bind(this);
+    renderTimedExercise(exercise) {
+        const timer = element("mcclellanmj-timer", {"id": "workout-timer", "time": 10});
+        timer.addEventListener("tick", (e) => {
+            if (0 === e.detail.remaining) {
+                const newTimer = element("mcclellanmj-timer", {"id": "workout-timer", "time": exercise.time});
+                newTimer.addEventListener("tick", (e) => {
+                    if (0 === e.detail.remaining) {
+                        newTimer.replaceWith(element("div", {"id": "timer-placeholder"}));
+                        document.getElementById("link-placeholder").replaceWith(Rendering.createNextLink(() => this.nextExercise()));
+                    }
+                });
 
-    return nextLink;
-}
+                timer.replaceWith(newTimer);
+            }
+        });
 
-function renderTimedExercise(exercise) {
-    const timer = element("mcclellanmj-timer", {"id": "workout-timer", "time": 10})
-    timer.addEventListener("tick", (e) => {
-        if(0 === e.detail.remaining) {
-            const newTimer = element("mcclellanmj-timer", {"id": "workout-timer", "time": exercise.time});
-            newTimer.addEventListener("tick", (e) => {
-                if(0 === e.detail.remaining) {
-                    newTimer.replaceWith(element("div", {"id": "timer-placeholder"}));
-                    document.getElementById("link-placeholder").replaceWith(renderNextLink());
-                }
-            });
+        return timer;
+    }
 
-            timer.replaceWith(newTimer);
+    renderExercise(exercise) {
+        const container = element("div", {"id": "exercise-container"},
+            element("h1", {}, text(exercise.name))
+        );
+
+        if (exercise.type === "timed-exercise") {
+            container.appendChild(this.renderTimedExercise(exercise));
+            container.appendChild(element("div", {"id": "link-placeholder"}));
+        } else {
+            container.appendChild(element("div", {"id": "timer-placeholder"}));
+            container.appendChild(Rendering.createNextLink(() => this.nextExercise()));
         }
-    });
 
-    return timer;
-}
-
-function renderExercise(exercise) {
-    const container = element("div", {"id": "exercise-container"},
-        element("h1", {}, text(exercise.name))
-    );
-
-    if(exercise.type === "timed-exercise") {
-        container.appendChild(renderTimedExercise(exercise));
-        container.appendChild(element("div", {"id": "link-placeholder"}));
-    } else {
-        container.appendChild(element("div", {"id": "timer-placeholder"}));
-        container.appendChild(renderNextLink());
+        return container;
     }
 
-    return container;
-}
+    static setFrameContent(child) {
+        const newFrame = element("div", {"id": "frame"}, child);
 
-async function beginApp() {
-    try {
-        const wakelock = await navigator.getWakeLock("screen");
-        wakelock.createRequest();
-    } catch (ex) {
-        // If we can't lock the screen ignore the error
-        // FIXME: Probably need to be some sort of notification in the UI that they don't have a locked screen
+        document.getElementById("frame").replaceWith(newFrame);
     }
-    const workoutId = window.location.hash.substr(1);
 
-    // FIXME: Less global variables
-    const dbWorkout = await getExercise(parseInt(workoutId));
-    workout = dbWorkout;
+    getCurrentExercise(pointer) {
+        return this.currentWorkout.exercises[pointer];
+    }
 
-    const exercise = getCurrentExercise(exercisePointer);
-    updateCounter();
-    setFrameContent(renderExercise(exercise));
+    nextExercise() {
+        if (this.pointer < this.currentWorkout.exercises.length - 1) {
+            Workout.setFrameContent(this.renderTimerPage());
+        } else {
+            Workout.setFrameContent(element("div", {}, text("DONE!")));
+        }
+    }
+
+    incrementExercise() {
+        this.pointer++;
+        this.updateCounter();
+    }
+
+    renderTimerPage() {
+        // FIXME: Maybe this should return a promise instead?
+        return Rendering.createTimerPage(this.getCurrentExercise(this.pointer + 1).name, this.restTime, () => {
+            this.incrementExercise();
+            Workout.setFrameContent(this.renderExercise(this.getCurrentExercise(this.pointer)));
+        });
+    }
+
+    updateCounter() {
+        document.getElementById("counter").textContent = `${this.pointer + 1} / ${this.currentWorkout.exercises.length}`
+    }
+
+    beginApp() {
+        const exercise = this.getCurrentExercise(this.pointer);
+        this.updateCounter();
+        Workout.setFrameContent(this.renderExercise(exercise));
+    }
 }
-
-document.addEventListener("DOMContentLoaded", beginApp);
