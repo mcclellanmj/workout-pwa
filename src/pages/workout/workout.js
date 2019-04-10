@@ -58,6 +58,7 @@ export class Workout {
         return workout;
     }
 
+    // FIXME: This needs some sort of timer chain
     renderTimedExercise(exercise) {
         const timer = element("mcclellanmj-timer", {"id": "workout-timer", "time": 10});
         timer.addEventListener("tick", (e) => {
@@ -77,6 +78,7 @@ export class Workout {
         return timer;
     }
 
+    // FIXME: Have this render two completely different views
     renderExercise(exercise) {
         const container = element("div", {"id": "exercise-container"},
             element("h1", {}, text(exercise.name))
@@ -91,6 +93,13 @@ export class Workout {
         }
 
         return container;
+    }
+
+    renderTimerPage() {
+        return Rendering.createTimerPage(this.getCurrentExercise(this.pointer + 1).name, this.restTime, () => {
+            this.incrementExercise();
+            Workout.setFrameContent(this.renderExercise(this.getCurrentExercise(this.pointer)));
+        });
     }
 
     static setFrameContent(child) {
@@ -114,14 +123,6 @@ export class Workout {
     incrementExercise() {
         this.pointer++;
         this.updateCounter();
-    }
-
-    renderTimerPage() {
-        // FIXME: Maybe this should return a promise instead?
-        return Rendering.createTimerPage(this.getCurrentExercise(this.pointer + 1).name, this.restTime, () => {
-            this.incrementExercise();
-            Workout.setFrameContent(this.renderExercise(this.getCurrentExercise(this.pointer)));
-        });
     }
 
     updateCounter() {
