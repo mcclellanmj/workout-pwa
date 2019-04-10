@@ -1,0 +1,5 @@
+- Sound when timer finishes
+- improve the timer callback
+- Format the main landing page
+- Create a workout editor
+- Create views that render based on a model
