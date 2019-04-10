@@ -2,5 +2,6 @@
 - make the rest time a configuration on the exercise
 - improve the timer callback
 - Format the main landing page
+- Confetti when finishing
 - Create a workout editor
 - Create views that render based on a model
