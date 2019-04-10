@@ -1,4 +1,5 @@
 - Sound when timer finishes
+- make the rest time a configuration on the exercise
 - improve the timer callback
 - Format the main landing page
 - Create a workout editor
