@@ -7,6 +7,7 @@ const precache = [
   './pages/workout/index.html',
   './pages/workout/workout.js',
   './javascript/element-utils.js',
+  './javascript/storage.js',
   './images/icon.png',
   './css/main.css',
   './components/timer.js',
