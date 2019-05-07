@@ -1,28 +1,7 @@
-import {text, element} from '../../javascript/element-utils.js';
-import {getExercise} from '../../javascript/storage.js';
+import { text, element } from '../../javascript/element-utils.js';
+import { getExercise } from '../../javascript/storage.js';
 
-class Rendering {
-    static createTimerPage(nextExercise, restTime, onFinish) {
-        const nextWrapper = element("div", {"id": "timer-header"});
-
-        nextWrapper.appendChild(element("h5", {}, text("Next Exercise")));
-        nextWrapper.appendChild(element("h5", {}, text(nextExercise)));
-
-        const container = element("div", {"id": "timer-container"}, nextWrapper);
-        const timerElement = element("mcclellanmj-timer", {"id": "rest-timer", "time": restTime});
-
-        timerElement.addEventListener("tick", e => {
-            const remaining = e.detail.remaining;
-
-            if (remaining === 0) {
-                onFinish();
-            }
-        });
-
-        container.appendChild(timerElement);
-        return container;
-    }
-
+class Views {
     static createNextLink(onclick) {
         const nextLink = element("a", {
             "href": "javascript:void(0)",
@@ -33,11 +12,54 @@ class Rendering {
 
         return nextLink;
     }
+
+    static repsExercisePage(exercise, target) {
+        return new Promise((resolve, _) => {
+            const container = element("div", { "id": "exercise-container" },
+                element("h1", {}, text(exercise.name))
+            );
+
+            container.appendChild(element("div", { "id": "timer-placeholder" }));
+            container.appendChild(Views.createNextLink(() => resolve("COMPLETE")));
+
+            target.appendChild(container);
+        });
+    }
+
+    static timedExercisePage(exercise, target) {
+        return new Promise((resolve, reject) => {
+            const timer = element("mcclellanmj-timer", { "id": "workout-timer", "time": 10 });
+
+            timer.addEventListener("tick", (e) => {
+                if (0 === e.detail.remaining) {
+                    resolve(timer);
+                }
+            });
+
+            target.appendChild(timer);
+        }).then(oldTimer => {
+            return new Promise((resolve, reject) => {
+                const newTimer = element("mcclellanmj-timer", { "id": "workout-timer", "time": exercise.time });
+                newTimer.addEventListener("tick", (e) => {
+                    if (0 === e.detail.remaining) {
+                        resolve(newTimer);
+                        // newTimer.replaceWith(element("div", { "id": "timer-placeholder" }));
+                        // document.getElementById("link-placeholder").replaceWith(Rendering.createNextLink(() => this.nextExercise()));
+                    }
+                });
+
+                oldTimer.replaceWith(newTimer);
+            });
+        }).then(oldTimer => {
+            return new Promise((resolve, reject) => {
+
+            });
+        })
+    };
 }
 
 export class Workout {
     constructor() {
-        this.pointer = 0;
         this.restTime = 90;
     }
 
@@ -60,78 +82,42 @@ export class Workout {
 
     // FIXME: This needs some sort of timer chain
     renderTimedExercise(exercise) {
-        const timer = element("mcclellanmj-timer", {"id": "workout-timer", "time": 10});
-        timer.addEventListener("tick", (e) => {
-            if (0 === e.detail.remaining) {
-                const newTimer = element("mcclellanmj-timer", {"id": "workout-timer", "time": exercise.time});
-                newTimer.addEventListener("tick", (e) => {
-                    if (0 === e.detail.remaining) {
-                        newTimer.replaceWith(element("div", {"id": "timer-placeholder"}));
-                        document.getElementById("link-placeholder").replaceWith(Rendering.createNextLink(() => this.nextExercise()));
-                    }
-                });
 
-                timer.replaceWith(newTimer);
-            }
-        });
-
-        return timer;
     }
 
-    // FIXME: Have this render two completely different views
-    renderExercise(exercise) {
-        const container = element("div", {"id": "exercise-container"},
-            element("h1", {}, text(exercise.name))
-        );
-
-        if (exercise.type === "timed-exercise") {
-            container.appendChild(this.renderTimedExercise(exercise));
-            container.appendChild(element("div", {"id": "link-placeholder"}));
-        } else {
-            container.appendChild(element("div", {"id": "timer-placeholder"}));
-            container.appendChild(Rendering.createNextLink(() => this.nextExercise()));
-        }
-
-        return container;
-    }
-
-    renderTimerPage() {
-        return Rendering.createTimerPage(this.getCurrentExercise(this.pointer + 1).name, this.restTime, () => {
-            this.incrementExercise();
-            Workout.setFrameContent(this.renderExercise(this.getCurrentExercise(this.pointer)));
-        });
-    }
-
-    static setFrameContent(child) {
-        const newFrame = element("div", {"id": "frame"}, child);
+    static makeFrame() {
+        const newFrame = element("div", { "id": "frame" });
 
         document.getElementById("frame").replaceWith(newFrame);
+
+        return newFrame;
     }
 
-    getCurrentExercise(pointer) {
-        return this.currentWorkout.exercises[pointer];
-    }
+    *getExercises() {
+        const exercises = this.currentWorkout.exercises;
 
-    nextExercise() {
-        if (this.pointer < this.currentWorkout.exercises.length - 1) {
-            Workout.setFrameContent(this.renderTimerPage());
-        } else {
-            Workout.setFrameContent(element("div", {}, text("DONE!")));
+        for (let i = 0; i < exercises.length; i++) {
+            let next = undefined;
+
+            if (i + 1 < exercises.length) {
+                next = exercises[i + 1];
+            }
+
+            yield [exercises[i], next]
         }
     }
 
-    incrementExercise() {
-        this.pointer++;
-        this.updateCounter();
-    }
+    async beginApp() {
+        for (const [exercise, nextExercise] of this.getExercises()) {
+            // FIXME: Temporary, needs else to handle other cases
+            if (exercise.type === 'body-reps' || exercise.type === 'weighted-reps') {
+                // FIXME: Figure out how to give it a blank frame
+                console.log("result exercise", await Views.repsExercisePage(exercise, Workout.makeFrame()));
 
-    updateCounter() {
-        document.getElementById("counter").textContent = `${this.pointer + 1} / ${this.currentWorkout.exercises.length}`
-    }
-
-    beginApp() {
-        const exercise = this.getCurrentExercise(this.pointer);
-        this.updateCounter();
-        Workout.setFrameContent(this.renderExercise(exercise));
+                if (nextExercise !== undefined) {
+                    console.log("result timer", await Views.timerPage(nextExercise.name, this.restTime, Workout.makeFrame()));
+                }
+            }
+        }
     }
 }
