@@ -1,0 +1,130 @@
+[
+    {
+      "name": "Strength Calisthenics",
+      "exercises": [
+        {
+          "name": "Pull Ups",
+          "type": "body-reps"
+        },
+        {
+          "name": "Squats",
+          "type": "weighted-reps"
+        },
+        {
+          "name": "Pull Ups",
+          "type": "body-reps"
+        },
+        {
+          "name": "Squats",
+          "type": "weighted-reps"
+        },
+        {
+          "name": "Pull Ups",
+          "type": "body-reps"
+        },
+        {
+          "name": "Squats",
+          "type": "weighted-reps"
+        },
+        {
+          "name": "Dips",
+          "type": "body-reps"
+        },
+        {
+          "name": "Romanian Deadlifts",
+          "type": "weighted-reps"
+        },
+        {
+          "name": "Dips",
+          "type": "body-reps"
+        },
+        {
+          "name": "Romanian Deadlifts",
+          "type": "weighted-reps"
+        },
+        {
+          "name": "Dips",
+          "type": "body-reps"
+        },
+        {
+          "name": "Romanian Deadlifts",
+          "type": "weighted-reps"
+        },
+        {
+          "name": "Rows",
+          "type": "body-reps"
+        },
+        {
+          "name": "Planche Pushup",
+          "type": "body-reps"
+        },
+        {
+          "name": "Rows",
+          "type": "body-reps"
+        },
+        {
+          "name": "Planche Pushup",
+          "type": "body-reps"
+        },
+        {
+          "name": "Rows",
+          "type": "body-reps"
+        },
+        {
+          "name": "Planche Pushup",
+          "type": "body-reps"
+        },
+        {
+          "name": "Plank",
+          "type": "timed-exercise",
+          "time": "60"
+        },
+        {
+          "name": "Copenhagen Plank",
+          "type": "timed-exercise",
+          "time": "30"
+        },
+        {
+          "name": "Reverse Hyperextension",
+          "type": "body-reps"
+        },
+        {
+          "name": "Plank",
+          "type": "timed-exercise",
+          "time": "60"
+        },
+        {
+          "name": "Copenhagen Plank",
+          "type": "timed-exercise",
+          "time": "30"
+        },
+        {
+          "name": "Reverse Hyperextension",
+          "type": "body-reps"
+        },
+        {
+          "name": "Plank",
+          "type": "timed-exercise",
+          "time": "60"
+        },
+        {
+          "name": "Copenhagen Plank",
+          "type": "timed-exercise",
+          "time": "30"
+        },
+        {
+          "name": "Reverse Hyperextension",
+          "type": "body-reps"
+        }
+      ]
+    },
+    {
+      "name": "Skill",
+      "exercises": [
+        {
+          "name": "Skill Exercise?",
+          "type": "body-reps"
+        }
+      ]
+    }
+  ]
