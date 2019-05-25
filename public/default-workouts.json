@@ -1,7 +1,11 @@
 [
     {
       "name": "Strength Calisthenics",
-      "exercises": [
+      "steps": [
+        {
+          "type": "set-resting-time",
+          "time": 90
+        },
         {
           "name": "Pull Ups",
           "type": "body-reps"
@@ -73,16 +77,20 @@
         {
           "name": "Planche Pushup",
           "type": "body-reps"
+        },
+        {
+          "type": "set-resting-time",
+          "time": 60
         },
         {
           "name": "Plank",
           "type": "timed-exercise",
-          "time": "60"
+          "time": 60
         },
         {
           "name": "Copenhagen Plank",
           "type": "timed-exercise",
-          "time": "30"
+          "time": 30
         },
         {
           "name": "Reverse Hyperextension",
@@ -91,12 +99,12 @@
         {
           "name": "Plank",
           "type": "timed-exercise",
-          "time": "60"
+          "time": 60
         },
         {
           "name": "Copenhagen Plank",
           "type": "timed-exercise",
-          "time": "30"
+          "time": 30
         },
         {
           "name": "Reverse Hyperextension",
@@ -105,12 +113,12 @@
         {
           "name": "Plank",
           "type": "timed-exercise",
-          "time": "60"
+          "time": 60
         },
         {
           "name": "Copenhagen Plank",
           "type": "timed-exercise",
-          "time": "30"
+          "time": 30
         },
         {
           "name": "Reverse Hyperextension",

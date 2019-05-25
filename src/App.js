@@ -1,25 +1,9 @@
 import React from 'react';
 import './App.css';
 import { getExercise } from './storage';
+import { Workout } from './pages/Workout';
+import { WorkoutList } from './pages/WorkoutList';
 
-class Timer extends React.Component {
-  render() {
-    return <span>Timing</span>;
-  }
-}
-
-class WorkoutList extends React.Component {
-  renderLink(workout) {
-    console.log(workout);
-    return <li key={ workout.id }><a href="javascript:void(0);" onClick={() => this.props.selectWorkout(workout)}>{ workout.name }</a></li>
-  }
-
-  render() {
-    return <ul>
-      { this.props.workouts.map(x => this.renderLink(x)) }
-    </ul>
-  }
-}
 
 class App extends React.Component {
   constructor(props) {
@@ -41,7 +25,7 @@ class App extends React.Component {
 
   workoutSelected(workout) {
     this.setState({
-      ...this.state, 
+      ...this.state,
       status: "WORKING_OUT",
       workout: workout
     });
@@ -49,12 +33,12 @@ class App extends React.Component {
   }
 
   render() {
-    if(this.state.status === "LOADING") {
+    if (this.state.status === "LOADING") {
       return <span>Loading Workouts from indexeddb</span>
     } else if (this.state.status === "SELECTING_WORKOUT") {
-      return <WorkoutList workouts={ this.state.workouts } selectWorkout={ (workout) => this.workoutSelected(workout) }></WorkoutList>;
+      return <WorkoutList workouts={this.state.workouts} selectWorkout={(workout) => this.workoutSelected(workout)}></WorkoutList>;
     } else if (this.state.status === "WORKING_OUT") {
-      return <div>Start workout</div>
+      return <Workout workout={this.state.workout}></Workout>
     }
   }
 }

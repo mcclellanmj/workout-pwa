@@ -1,3 +1,45 @@
+body {
+  margin: 0;
+  color: #FFFF00;
+}
+
+h1 {
+  text-align: center;
+  margin: 0;
+}
+
+#root {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: #0A0A00;
+  height: 100vh;
+}
+
+.full-button {
+  font-size: 25px;
+  display: block;
+  width: 100%;
+  background-color: #FFFF00;
+  color: #0A0A00;
+  border: 1px solid #404000;
+  transition: background-color 150ms;
+  height: 75px;
+}
+
+#workout-container {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+}
+
+#workout-container .full-button:not(:first-child) {
+  margin-top: 25px;
+}
+
+.full-button:hover, .full-button:active {
+  background-color: #E0E000;
+}
+
 .App {
   text-align: center;
 }
