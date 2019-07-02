@@ -3,30 +3,12 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" type="text/css" href="./css/main.css" />
+    <link rel="manifest" href="./manifest.json">
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <link rel="icon" href="./favicon.ico" type="image/x-icon">
 
     <script>
-        const request = indexedDB.open('workout-pwa', 1);
-        request.onupgradeneeded = (event) => {
-            const db = event.target.result;
-
-            const objStore =  db.createObjectStore("workouts", { autoIncrement: true, keyPath: "id" });
-            objStore.createIndex("name", "name", { unique: true });
-
-            // Once the store is created insert the default data
-            objStore.transaction.oncomplete = async function(event) {
-                const response = await fetch("./javascript/default-workouts.json");
-                const body = await response.json();
-
-                const exerciseStore = db.transaction("workouts", "readwrite").objectStore("workouts");
-                body.forEach(function(exercise) {
-                    exerciseStore.add(exercise);
-                });
-            }
-        };
-
         navigator.serviceWorker.register('service-worker.js', {
             scope: './'
         });
@@ -34,9 +16,17 @@
 </head>
 
 <body>
-    <h5>v1.0.4</h5>
-    <a href="pages/workout/index.html#1">Strength</a>
-    <a href="pages/workout/index.html#2">Skill</a>
+    <div id="container">
+        <div class="version-topbar">v1.1.0</div>
+        <div>
+            <div>
+                <a class="btn-primary btn-block" href="./pages/workout/index.html#1">Upper Body</a>
+            </div>
+            <div>
+                <a class="btn-primary btn-block" href="./pages/workout/index.html#2">Core</a>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

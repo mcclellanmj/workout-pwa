@@ -16,10 +16,11 @@ class Timer extends HTMLElement {
         this.totalTime = parseInt(time);
         this.lastSet = this.totalTime;
         this.setText(this.totalTime);
+        this.inHighResolutionMode = false;
 
         shadow.appendChild(this.timerRootElement);
 
-        this.ticker = window.setInterval(() => this.tick(), 100);
+        this.ticker = window.setInterval(() => this.tick(), 450);
     }
 
     tick() {
@@ -33,8 +34,14 @@ class Timer extends HTMLElement {
             this.lastSet = externalRemaining;
         }
 
-        if(remaining < 0) {
+        if(remaining == 0) {
             window.clearInterval(this.ticker);
+        }
+
+        if(remaining < 10 && !this.inHighResolutionMode) {
+            window.clearInterval(this.ticker);
+            this.ticker = window.setInterval(() => this.tick(), 20);
+            this.inHighResolutionMode = true;
         }
     }
 

@@ -1,6 +1,6 @@
 [
   {
-    "name": "Strength Calisthenics",
+    "name": "Limbs",
     "exercises": [
       {
         "name": "Pull Ups",
@@ -72,57 +72,53 @@
       },
       {
         "name": "Planche Pushup",
-        "type": "body-reps"
-      },
-      {
-        "name": "Plank",
-        "type": "timed-exercise",
-        "time": "60"
-      },
-      {
-        "name": "Copenhagen Plank",
-        "type": "timed-exercise",
-        "time": "30"
-      },
-      {
-        "name": "Reverse Hyperextension",
-        "type": "body-reps"
-      },
-      {
-        "name": "Plank",
-        "type": "timed-exercise",
-        "time": "60"
-      },
-      {
-        "name": "Copenhagen Plank",
-        "type": "timed-exercise",
-        "time": "30"
-      },
-      {
-        "name": "Reverse Hyperextension",
-        "type": "body-reps"
-      },
-      {
-        "name": "Plank",
-        "type": "timed-exercise",
-        "time": "60"
-      },
-      {
-        "name": "Copenhagen Plank",
-        "type": "timed-exercise",
-        "time": "30"
-      },
-      {
-        "name": "Reverse Hyperextension",
         "type": "body-reps"
       }
     ]
   },
   {
-    "name": "Skill",
+    "name": "Core",
     "exercises": [
       {
-        "name": "Skill Exercise?",
+        "name": "Plank",
+        "type": "timed-exercise",
+        "time": "120"
+      },
+      {
+        "name": "Copenhagen Plank",
+        "type": "timed-exercise",
+        "time": "50"
+      },
+      {
+        "name": "Reverse Hyperextension",
+        "type": "body-reps"
+      },
+      {
+        "name": "Plank",
+        "type": "timed-exercise",
+        "time": "120"
+      },
+      {
+        "name": "Copenhagen Plank",
+        "type": "timed-exercise",
+        "time": "50"
+      },
+      {
+        "name": "Reverse Hyperextension",
+        "type": "body-reps"
+      },
+      {
+        "name": "Plank",
+        "type": "timed-exercise",
+        "time": "120"
+      },
+      {
+        "name": "Copenhagen Plank",
+        "type": "timed-exercise",
+        "time": "50"
+      },
+      {
+        "name": "Reverse Hyperextension",
         "type": "body-reps"
       }
     ]

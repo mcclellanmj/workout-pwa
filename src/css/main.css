@@ -1,6 +1,6 @@
 :root {
-    --highlight-color: #E9E918;
-    --background-color: #30302E;
+    --highlight-color: #E9E900;
+    --background-color: #000;
 }
 
 body, html {
@@ -36,7 +36,19 @@ body, html {
     color: var(--background-color);
 }
 
+.version-topbar {
+    justify-self: end;
+    align-self: center;
+    margin: 0 15px;
+}
+
+.btn-block {
+    display: block;
+    margin: 15px 15px;
+}
+
 #next-exercise-button {
+    display: block;
     margin: 30px 15px;
 }
 

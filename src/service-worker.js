@@ -1,4 +1,4 @@
-const version = "v1.0.4";
+const version = "v1.1.0";
 
 const precache = [
   './',
@@ -7,7 +7,9 @@ const precache = [
   './pages/workout/index.html',
   './pages/workout/workout.js',
   './javascript/element-utils.js',
+  './javascript/audio.js',
   './javascript/storage.js',
+  './javascript/workouts.json',
   './images/icon.png',
   './css/main.css',
   './components/timer.js',
