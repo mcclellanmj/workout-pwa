@@ -28,18 +28,20 @@ class Rendering {
 export class Workout {
     constructor() {
         this.pointer = 0;
-        this.restTime = 8;
+        this.restTime = 90;
     }
 
     static async create(workoutId) {
         const workout = new Workout();
 
-        try {
-            const wakelock = await navigator.getWakeLock("screen");
-            wakelock.createRequest();
-        } catch (ex) {
-            // If we can't lock the screen ignore the error
-            // FIXME: Probably need to be some sort of notification in the UI that they don't have a locked screen
+        if(navigator.wakelock !== undefined) {
+            try {
+                const wakelock = await navigator.getWakeLock("screen");
+                wakelock.createRequest();
+            } catch (ex) {
+                // If we can't lock the screen ignore the error
+                // FIXME: Probably need to be some sort of notification in the UI that they don't have a locked screen
+            }
         }
 
         const dbWorkout = await getExercise(parseInt(workoutId));
