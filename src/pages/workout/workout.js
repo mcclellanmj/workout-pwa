@@ -34,7 +34,7 @@ export class Workout {
     static async create(workoutId) {
         const workout = new Workout();
 
-        if(navigator.wakelock !== undefined) {
+        if(navigator.getWakeLock !== undefined) {
             try {
                 const wakelock = await navigator.getWakeLock("screen");
                 wakelock.createRequest();
